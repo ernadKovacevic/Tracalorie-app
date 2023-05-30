@@ -27,6 +27,12 @@ class CalorieTracker {
         this._render();
     }
 
+    setLimit(limit) {
+        this._caloriesLimit = limit;
+        this._displayCaloriesLimit();
+        this._render();
+    }
+
     _displayCaloriesTotal(){
         document.getElementById('calories-total').textContent = this._totalCalories
     }
@@ -178,6 +184,7 @@ class App {
         document.getElementById('filter-meals').addEventListener('input', this._filterMeals.bind(this));
         document.getElementById('filter-workouts').addEventListener('input', this._filterWorkouts.bind(this));
         document.getElementById('reset').addEventListener('click', this._resetDay.bind(this));
+        document.getElementById('limit-form').addEventListener('submit', this._setLimit.bind(this));
     }
 
     _newItem (type, e) {
@@ -239,7 +246,22 @@ class App {
         meals.forEach(el => {
             el.remove();
         })
-        
+    }
+
+    _setLimit(e) {
+        e.preventDefault();
+        const limit = document.getElementById('limit');
+        if (limit.value === '') {
+            alert('Please add a limit')
+            return;
+        }
+
+        this.tracker.setLimit(+limit.value);
+        limit.value = '';
+
+        const modalEl = document.getElementById('limit-modal')
+        const modal = bootstrap.Modal.getInstance(modalEl);
+        modal.hide;
     }
 }
 
