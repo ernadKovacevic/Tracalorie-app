@@ -170,27 +170,14 @@ class Workout {
     }
 }
 
-// const tracker = new CalorieTracker();
-
-// const breakfast = new Meal('Breakfast', 400);
-// const lunch = new Meal('Lunch', 350)
-// tracker.addMeal(breakfast);
-//  tracker.addMeal(lunch)
-
-// const run = new Workout('Morning run', 320);
-// // const pushUps = new Workout('Pushups', 10000);
-// tracker.addWorkout(run);
-// // tracker.addWorkout(pushUps);
-
-// console.log(tracker._meals);
-// console.log(tracker._workouts);
-// console.log(tracker._totalCalories);
-
 class App {
     constructor() {
         this.tracker = new CalorieTracker();
         document.getElementById('meal-form').addEventListener('submit', this._newItem.bind(this,'meal'));
         document.getElementById('workout-form').addEventListener('submit', this._newItem.bind(this, 'workout'));
+        document.getElementById('filter-meals').addEventListener('input', this._filterMeals.bind(this));
+        document.getElementById('filter-workouts').addEventListener('input', this._filterWorkouts.bind(this));
+        document.getElementById('reset').addEventListener('click', this._resetDay.bind(this));
     }
 
     _newItem (type, e) {
@@ -219,6 +206,40 @@ class App {
         formMenu.classList.remove('collapse');
 
         formMenu.classList.add('collapse');
+    }
+
+    _filterMeals(e){
+        const meals = document.querySelectorAll('#meal-items .card');
+        meals.forEach(el => {
+            if (el.firstElementChild.firstElementChild.firstElementChild
+                .textContent.toLowerCase().includes(e.target.value)){
+                    el.style.display = 'flex';
+            }else{
+                el.style.display = 'none';
+            }
+        })
+    }
+
+    _filterWorkouts(e){
+        const workouts = document.querySelectorAll('#workout-items .card');
+        workouts.forEach(el => {
+            if (el.firstElementChild.firstElementChild.firstElementChild
+                .textContent.toLowerCase().includes(e.target.value)){
+                    el.style.display = 'flex';
+            }else{
+                el.style.display = 'none';
+            }
+        })
+    }
+
+    _resetDay(e) {
+        delete this.tracker;
+        this.tracker = new CalorieTracker();
+        const meals = document.querySelectorAll('.my-2');
+        meals.forEach(el => {
+            el.remove();
+        })
+        
     }
 }
 
