@@ -70,7 +70,8 @@ class CalorieTracker {
         const caloriesProgressEl = document.getElementById('calorie-progress');
         const percentage = (this._totalCalories / this._caloriesLimit ) * 100;
 
-        const width = Math.min(percentage, 100);
+        const width = Math.min(percentage, 100) <= 0 ? 0 : Math.min(percentage, 100);
+
         caloriesProgressEl.style.width = `${width}%`;
 
         if (width === 100) {
@@ -125,50 +126,32 @@ class Workout {
 class App {
     constructor() {
         this.tracker = new CalorieTracker();
-        document.getElementById('meal-form').addEventListener('submit', this._newMeal.bind(this));
-        document.getElementById('workout-form').addEventListener('submit', this._newWorkout.bind(this));
+        document.getElementById('meal-form').addEventListener('submit', this._newItem.bind(this,'meal'));
+        document.getElementById('workout-form').addEventListener('submit', this._newItem.bind(this, 'workout'));
     }
 
-    _newMeal (e) {
+    _newItem (type, e) {
         e.preventDefault();
-        let mealName = document.getElementById('meal-name').value;
-        let mealCalories = document.getElementById('meal-calories').value;
+        let name = document.getElementById(`${type}-name`).value;
+        let calories = document.getElementById(`${type}-calories`).value;
 
-        if(mealName === '' || mealCalories === ''){
+        if(name === '' || calories === ''){
             alert("Please fill meal form");
             return;
         }
 
-        const meal = new Meal(mealName, parseInt(mealCalories));
-        this.tracker.addMeal(meal);
-
-        mealName = '';
-        mealCalories = '';
-
-        const formMenu = document.getElementById('collapse-meal');
-        formMenu.classList.remove('show');
-        formMenu.classList.remove('collapse');
-
-        formMenu.classList.add('collapse');
-    }
-
-    _newWorkout (e) {
-        e.preventDefault();
-        let workoutName = document.getElementById('workout-name').value;
-        let workoutCalories = document.getElementById('workout-calories').value;
-
-        if(workoutName === '' || workoutCalories === ''){
-            alert("Please fill workout form");
-            return;
+        if (type === 'meal') {
+            const meal = new Meal(name, parseInt(calories));
+            this.tracker.addMeal(meal);
+        } else {
+            const workout = new Workout(name, parseInt(calories));
+            this.tracker.addWorkout(workout);
         }
 
-        const workout = new Workout(workoutName, parseInt(workoutCalories));
-        this.tracker.addWorkout(workout);
+        name = '';
+        calories = '';
 
-        workoutName = '';
-        workoutCalories = '';
-
-        const formMenu = document.getElementById('collapse-workout');
+        const formMenu = document.getElementById(`collapse-${type}`);
         formMenu.classList.remove('show');
         formMenu.classList.remove('collapse');
 
