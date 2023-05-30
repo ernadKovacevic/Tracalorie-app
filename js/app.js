@@ -101,7 +101,17 @@ class CalorieTracker {
                         </button>
                     </div>
                 </div>`
+        div.addEventListener('click', this._deleteMeal.bind(this,div,meal));
         mealItems.appendChild(div);
+    }
+
+    _deleteMeal(div,meal,e) {
+        if(e.target.tagName === 'BUTTON' || e.target.tagName === 'I'){
+            div.remove();
+            this._totalCalories -= meal.calories;
+            this._meals = this._meals.filter(el => el !== meal);
+        }
+        this._render();
     }
 
     _displayNewWorkout(workout) {
@@ -122,7 +132,17 @@ class CalorieTracker {
                         </button>
                     </div>
                 </div>`
+        div.addEventListener('click', this._deleteWorkout.bind(this,div,workout));
         workoutItems.appendChild(div);
+    }
+
+    _deleteWorkout(div,workout,e) {
+        if(e.target.tagName === 'BUTTON' || e.target.tagName === 'I'){
+            div.remove();
+            this._totalCalories += workout.calories;
+            this._workouts = this._workouts.filter(el => el !== workout)
+        }
+        this._render();
     }
 
     _render() {
