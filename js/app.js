@@ -345,8 +345,7 @@ class App {
     }
 
     _resetDay(e) {
-        localStorage.removeItem('calorieLimit');
-        localStorage.removeItem('totalCalories');
+        localStorage.clear();
         delete this.tracker;
         this.tracker = new CalorieTracker();
         const meals = document.querySelectorAll('.my-2');
